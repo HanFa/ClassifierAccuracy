@@ -20,8 +20,20 @@ function fit_classifiers {
     for i in 1 2 3 4 5 10 25 50 100 200
     do
         python classifier.py --dlibFacePredictor dlib/shape_predictor_68_face_landmarks.dat --imgDim 96 \
-        --networkModel openface/nn4.small2.v1.t7 train dataset/embeddings-$i
+        --networkModel openface/nn4.small2.v1.t7 train dataset/embeddings-$i --classifier linearSVC
     done
 }
 
+# Predict 
+function predict_validation {
+    for i in 1 2 3 4 5 10 25 50 100 200
+    do
+        python classifier.py --dlibFacePredictor dlib/shape_predictor_68_face_landmarks.dat --imgDim 96 \
+        --networkModel openface/nn4.small2.v1.t7 \
+        infer --classifierModel ./dataset/embeddings-$i/classifier.pkl --embeddings_dir ./dataset/validation --result_name linearSVC-$i
+    done
+}
+
+split_embeddings
 fit_classifiers
+predict_validation

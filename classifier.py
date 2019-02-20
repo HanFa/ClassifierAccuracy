@@ -109,7 +109,7 @@ def train(args):
     le = LabelEncoder().fit(labels)
     labelsNum = le.transform(labels)
     nClasses = len(le.classes_)
-    print("Training for {} classes.".format(nClasses))
+    print("Training for {} classes using classifier {}.".format(nClasses, args.classifier))
 
     if args.classifier == 'LinearSvm':
         clf = SVC(C=1, kernel='linear', probability=True)
@@ -143,7 +143,7 @@ def train(args):
     # ref: https://jessesw.com/Deep-Learning/
     elif args.classifier == 'DBN':
         from nolearn.dbn import DBN
-        clf = DBN([embeddings.shape[1], 500, labelsNum[-1:][0] + 1],  # i/p nodes, hidden nodes, o/p nodes
+        clf = DBN([embeddings.shape[1], 500, 296],  # i/p nodes, hidden nodes, o/p nodes
                   learn_rates=0.3,
                   # Smaller steps mean a possibly more accurate result, but the
                   # training will take longer
@@ -200,6 +200,30 @@ def infer(args, multiple=False):
                 print("  + Distance from the mean: {}".format(dist))
 
 
+def infer_embeddings(args):
+    with open(args.classifierModel, 'rb') as f:
+        if sys.version_info[0] < 3:
+            (le, clf) = pickle.load(f)
+        else:
+            (le, clf) = pickle.load(f, encoding='latin1')
+
+    predict_res = []
+    with open(os.path.join(args.embeddings_dir, 'reps.csv')) as f:
+        lines = f.readlines()
+        for idx, line in enumerate(lines):
+            rep = np.array(list(map(float, line.strip().split(',')))).reshape(1, -1)
+            predictions = clf.predict_proba(rep).ravel()
+            maxI = np.argmax(predictions)
+            person = le.inverse_transform(maxI)
+            predict_res.append(person)
+            print("Predict embeddings at line {} is person {}".format(idx, person))
+
+
+    with open(os.path.join(args.embeddings_dir, 'predict_{}.csv'.format(args.result_name)), 'w') as f:
+        f.write('\n'.join(list(map(str, predict_res))))
+
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
@@ -248,11 +272,17 @@ if __name__ == '__main__':
     inferParser = subparsers.add_parser(
         'infer', help='Predict who an image contains from a trained classifier.')
     inferParser.add_argument(
-        'classifierModel',
+        '--classifierModel',
         type=str,
         help='The Python pickle representing the classifier. This is NOT the Torch network model, which can be set with --networkModel.')
-    inferParser.add_argument('imgs', type=str, nargs='+',
-                             help="Input image.")
+    # inferParser.add_argument('imgs', type=str, nargs='+',
+    #                          help="Input image.")
+
+    inferParser.add_argument('--embeddings_dir', type=str,
+                         help="Input embeddings directory to infer.")
+    inferParser.add_argument('--result_name', type=str,
+                         help="Result name for prediction output.")
+
     inferParser.add_argument('--multi', help="Infer multiple faces in image",
                              action="store_true")
 
@@ -287,4 +317,5 @@ Use `--networkModel` to set a non-standard Torch network model.""")
     if args.mode == 'train':
         train(args)
     elif args.mode == 'infer':
-        infer(args, args.multi)
+        # infer(args, args.multi)
+        infer_embeddings(args)
