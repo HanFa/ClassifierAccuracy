@@ -3,6 +3,7 @@ Openface Classifier Accuracy vs. Data Size
 
 .. contents::
 
+The repo link for this experiment is `https://github.com/HanFa/ClassifierAccuracy <https://github.com/HanFa/ClassifierAccuracy>`_.
 
 Research Objectives
 -----------------------------
@@ -14,6 +15,7 @@ Hypothesis
 -----------------------------
 * Accuracy of classification will increase until a saturation points as the data size increases
 * The cross entropy loss will decrease as the data size increases
+* The model size should remain constant (independent of the size of training set)
 
 Experiment Details
 ---------------------
