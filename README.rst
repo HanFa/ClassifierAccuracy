@@ -117,4 +117,47 @@ Model Size
 The size of classifiers (after pickling) has been measured. The Sklearn implementation of ``linearSVC``, ``DescisionTree`` and ``RadialSvm`` turns out to have a linearly increasing model size as the training embeddings number increases. (**Why?**) ``DBN``, ``GaussianNB`` and ``GMM`` has a fixed model size because of the fixed number of parameters predefined inside the model architecture.
 
 
+Updates: Run on the whole VGGFace2 dataset
+----------------------------------------------------
+
+The previous part of this experiment builts a classifier upon 296 different identities (the subset of VGGFace2).
+
+This expeirment is followed up with the **complete** VGGFace2 dataset with 8714 identities. After running ``python3 show_embeddings_stats.py``, it suggests:
+
+.. code::
+
+    8338 out of 8404 identities have face images more than 105
+    7379 out of 8404 identities have face images more than 205
+    6280 out of 8404 identities have face images more than 255
+
+We choose to work with these 8338 identities with more than 105 face images in the dataset. For each time, 
+the training cluster size (face number per identity) is [1,2,3,4,5,10,25,50,100] and we leave out 5 per identity for the validation.
+
+
+Results
+~~~~~~~~~~~~~
+
+
++---------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+|  Accuracy     | 1              | 2              | 3              | 4              | 5              | 10             | 25             | 50             | 100            |
++---------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+| LinearSVC     | 0.119908851043 | 0.189565843128 | 0.231446390022 | 0.259990405373 | 0.282513792276 | 0.340441352842 | 0.388006716239 | 0.415087550971 | 0.431734228832 |
++---------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+| SVC(linear)   | running        | running        | running        | running        | running        | running        | running        | running        | running        |
++---------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+
++---------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+|Model Size (MB)| 1              | 2              | 3              | 4              | 5              | 10             | 25             | 50             | 100            |
++---------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+| LinearSVC     | 25531029       | 25531029       | 25626201       | 25641283       | 25651124       | 25684876       | 25715993       | 25735353       | 25761043       |
++---------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+| SVC(linear)   | 5260488484     | 6908955519     | 8790882731     | 10762224678    | 1283741378     | 23544143809    | training       | training       | training       |
++---------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+----------------+
+
+These results demostrate the difference in scalability between ``LinearSVC`` and ``SVC(kernel='linear')``. 
+The ``SVC(kernel='linear')`` has worse scalability because of the linearly increasing model size as the training set increases. 
+They vary in terms of model size from each other because of their different underlying implementation. I made a comparison shown as below:
+
+.. image::  compare.png
+   :width: 800px
 
