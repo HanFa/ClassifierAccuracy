@@ -5,7 +5,7 @@ from collections import Counter
 if __name__ == '__main__':
 
     labels = []
-    with open('dataset/embeddings/labels.csv') as f:
+    with open('../dataset/embeddings/labels.csv') as f:
         lines = f.readlines()
         for line in lines:
             label = line.strip().split(',')[0]
@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     identity_to_reps = dict.fromkeys(filtered_identity, None)
 
-    with open('dataset/embeddings/reps.csv') as f:
+    with open('../dataset/embeddings/reps.csv') as f:
         lines = f.readlines()
         for idx, line in enumerate(lines):
             label = str(labels[idx])
@@ -36,16 +36,16 @@ if __name__ == '__main__':
 
     # prepare training sets
     for train_datasize in train_datasizes:
-        os.mkdir('dataset/embeddings-{}'.format(train_datasize))
+        os.mkdir('../dataset/embeddings-{}'.format(train_datasize))
         for identity, reps in identity_to_reps.items():
-            open('dataset/embeddings-{}/labels.csv'.format(train_datasize), 'a').write('{},dataset/align/n000001/0424_01.png\n'.format(identity) * train_datasize)
-            open('dataset/embeddings-{}/reps.csv'.format(train_datasize), 'a').write('\n'.join(reps[:train_datasize]) + '\n')
+            open('../dataset/embeddings-{}/labels.csv'.format(train_datasize), 'a').write('{},dataset/align/n000001/0424_01.png\n'.format(identity) * train_datasize)
+            open('../dataset/embeddings-{}/reps.csv'.format(train_datasize), 'a').write('\n'.join(reps[:train_datasize]) + '\n')
 
     # prepare validation set
-    os.mkdir('dataset/validation')
+    os.mkdir('../dataset/validation')
     for identity, reps in identity_to_reps.items():
-        open('dataset/validation/labels.csv', 'a').write('{},dataset/align/n000001/0424_01.png\n'.format(identity) * valid_per_identity)
-        open('dataset/validation/reps.csv', 'a').write('\n'.join(reps[-valid_per_identity:]) + '\n')
+        open('../dataset/validation/labels.csv', 'a').write('{},dataset/align/n000001/0424_01.png\n'.format(identity) * valid_per_identity)
+        open('../dataset/validation/reps.csv', 'a').write('\n'.join(reps[-valid_per_identity:]) + '\n')
 
     
 

@@ -4,7 +4,10 @@ from itertools import product
 model_types = ['linearSVC', 'RadialSvm', 'GaussianNB', 'GMM', 'DecisionTree', 'DBN']
 data_sizes = [1, 2, 3, 4, 5, 10, 50, 100, 200]
 
-validation_dir = 'dataset/validation'
+validation_dir = '../dataset/validation' # Change this to the directory of the prediction results
+measure_model_size = False # change this to true to measure the model sizes
+
+
 
 def get_accuracy(l1, l2):
     assert len(l1) == len(l2)
@@ -29,7 +32,8 @@ if __name__ == '__main__':
 
     for model in model_types:
         open('results-accuracy.tsv', 'a').write(model + '\t')
-        open('results-modelsize.tsv', 'a').write(model + '\t')
+        if measure_model_size:
+            open('results-modelsize.tsv', 'a').write(model + '\t')
 
         for data_size in data_sizes:
             fname = os.path.join(validation_dir, 'predict_{}-{}.csv'.format(model, data_size))
@@ -41,9 +45,10 @@ if __name__ == '__main__':
 
             accuracy = get_accuracy(labels, predictions)
             open('results-accuracy.tsv', 'a').write('{}\t'.format(accuracy))
-            open('results-modelsize.tsv', 'a').write('{}\t'.format(os.path.getsize('dataset/embeddings-{}/{}.pkl'.format(data_size, model))))
+            if measure_model_size:
+                open('results-modelsize.tsv', 'a').write(
+                    '{}\t'.format(
+                        os.path.getsize('../dataset/embeddings-{}/{}.pkl'.format(data_size, model))))
             
-
-
         open('results-accuracy.tsv', 'a').write('\n')
         open('results-modelsize.tsv', 'a').write('\n')

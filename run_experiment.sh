@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function align_faces {
-    ./align-dlib.py --dlibFacePredictor ./dlib/shape_predictor_68_face_landmarks.dat ./dataset/raw align \
+    ./utils/align-dlib.py --dlibFacePredictor ./dlib/shape_predictor_68_face_landmarks.dat ./dataset/raw align \
     outerEyesAndNose ./dataset/align --size 96 
 }
 
@@ -12,7 +12,7 @@ function generate_rep() {
 
 # Split representations for train and test set
 function split_embeddings {
-    python split_embeddings.py
+    python utils/split_embeddings.py
 }
 
 # Fit and dump the classifiers

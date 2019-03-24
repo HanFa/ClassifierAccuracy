@@ -100,7 +100,7 @@ All the results are archived in an Excel worksheet `results.xls <results.xls>`_.
 Accuracy
 ~~~~~~~~~~~~~
 
-.. image::  accuracy.png
+.. image::  doc/accuracy.png
    :width:  800px
 
 ``GMM`` and ``DecisionTree`` are not appropriate choices to classify face embeddings, as commented by Brandon Amos. ``linearSVC``, ``RadialSvm`` and ``DBN`` (Deep belief network) have similarly better performance.
@@ -111,7 +111,7 @@ As expected, the engagement of a new embedding sample points significantly impro
 Model Size
 ~~~~~~~~~~~~~
 
-.. image::  modelsize.png
+.. image::  doc/modelsize.png
    :width:  800px
 
 The size of classifiers (after pickling) has been measured. The Sklearn implementation of ``linearSVC``, ``DescisionTree`` and ``RadialSvm`` turns out to have a linearly increasing model size as the training embeddings number increases. (**Why?**) ``DBN``, ``GaussianNB`` and ``GMM`` has a fixed model size because of the fixed number of parameters predefined inside the model architecture.
@@ -158,6 +158,6 @@ These results demostrate the difference in scalability between ``LinearSVC`` and
 The ``SVC(kernel='linear')`` has worse scalability because of the linearly increasing model size as the training set increases. 
 They vary in terms of model size from each other because of their different underlying implementation. I made a comparison shown as below:
 
-.. image::  compare.png
+.. image::  doc/compare.png
    :width: 800px
 
