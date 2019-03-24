@@ -1,10 +1,10 @@
 import os
 from itertools import product
 
-model_types = ['linearSVC', 'RadialSvm', 'GaussianNB', 'GMM', 'DecisionTree', 'DBN']
-data_sizes = [1, 2, 3, 4, 5, 10, 50, 100, 200]
+model_types = ['SVC']
+data_sizes = [1]
 
-validation_dir = '../dataset/validation' # Change this to the directory of the prediction results
+prediction_dir = '/Users/fang/Desktop/FaceEmbeddingClassifiers/predictions/' # Change this to the directory of the prediction results
 measure_model_size = False # change this to true to measure the model sizes
 
 
@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     # Load in groud-truth label
     labels = []
-    with open(os.path.join(validation_dir, 'labels.csv')) as f:
+    with open(os.path.join(prediction_dir, 'labels.csv')) as f:
         lines = f.readlines()
         for line in lines:
             labels.append(int(line.strip().split(',')[0]))
@@ -36,7 +36,7 @@ if __name__ == '__main__':
             open('results-modelsize.tsv', 'a').write(model + '\t')
 
         for data_size in data_sizes:
-            fname = os.path.join(validation_dir, 'predict_{}-{}.csv'.format(model, data_size))
+            fname = os.path.join(prediction_dir, 'predict_{}-{}.csv'.format(model, data_size))
             predictions = []
             with open(fname, 'r') as f:
                 lines = f.readlines()
