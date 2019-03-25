@@ -4,7 +4,7 @@ from itertools import product
 model_types = ['SVC']
 data_sizes = [1]
 
-prediction_dir = '/Users/fang/Desktop/FaceEmbeddingClassifiers/predictions/' # Change this to the directory of the prediction results
+prediction_dir = '../dataset/validation/' # Change this to the directory of the prediction results
 measure_model_size = False # change this to true to measure the model sizes
 
 
